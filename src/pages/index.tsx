@@ -1,7 +1,11 @@
-import { Header } from "../components/Header/index";
+
 
 export default function Home() {
+
   return (
-    <Header />
+    <h1>INDEX</h1>
   )
+}
+
+export async function getStaticProps() {
 }
