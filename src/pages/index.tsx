@@ -1,12 +1,23 @@
 import { GetStaticProps } from 'next';
-import Image from 'next/image';
 import { format, parseISO} from 'date-fns';
 import { api } from '../services/api';
-import { Episode } from '../models/Episode';
-import enUS from 'date-fns/locale/en-US';
 import { convertDurationToTimeString } from '../utils/convertDurationToTimeString';
+import Image from 'next/image';
+import enUS from 'date-fns/locale/en-US';
 
 import styles from '../styles/home.module.scss';
+import Link from 'next/link';
+
+interface Episode {
+  id: string,
+  title: string,
+  members: string,
+  thumbnail: string,
+  publishedAt: string,
+  duration: number,
+  durationAsString: string,
+  url: string,
+}
 
 interface HomeProps { 
   latestEpisodes: Episode[],
@@ -32,7 +43,9 @@ export default function Home({ latestEpisodes, allEpisodes }: HomeProps) {
                 />
 
                 <div className={styles.episodeDetails}>
-                  <a href="">{ep.title}</a>
+                  <Link href={`/episodes/${ep.id}`}>
+                    <a>{ep.title}</a>
+                  </Link>
                   <p>{ep.members}</p>
                   <span>{ep.publishedAt}</span>
                   <span>{ep.durationAsString}</span>
@@ -51,12 +64,14 @@ export default function Home({ latestEpisodes, allEpisodes }: HomeProps) {
 
 				<table cellSpacing={0}>
 					<thead>
-						<th></th>
-						<th>Podcast</th>
-						<th>Participants</th>
-						<th>Date</th>
-						<th>Duration</th>
-						<th></th>
+            <tr>
+              <th></th>
+              <th>Podcast</th>
+              <th>Participants</th>
+              <th>Date</th>
+              <th>Duration</th>
+              <th></th>
+            </tr>
 					</thead>
 					<tbody>
 						{allEpisodes.map((ep) => { 
@@ -72,7 +87,9 @@ export default function Home({ latestEpisodes, allEpisodes }: HomeProps) {
 										/>
 									</td>
 									<td>
-										<a href="">{ep.title}</a>
+                    <Link href={`/episodes/${ep.id}`}>
+										  <a>{ep.title}</a>
+                    </Link>
 									</td>
 									<td>{ep.members}</td>
 									<td className={styles.publishedAtTableData}>{ep.publishedAt}</td>
@@ -110,7 +127,6 @@ export const getStaticProps: GetStaticProps = async () => {
       publishedAt: format(parseISO(ep.published_at), 'MMM d yy', { locale: enUS }),
       duration: Number(ep.file.duration),
       durationAsString: convertDurationToTimeString(Number(ep.file.duration)),
-      description: ep.description,
       url: ep.file.url
     }
   })
