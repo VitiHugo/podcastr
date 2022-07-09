@@ -7,6 +7,8 @@ import enUS from 'date-fns/locale/en-US';
 
 import styles from '../styles/home.module.scss';
 import Link from 'next/link';
+import { PlayerContext } from '../contexts/PlayerContext';
+import { useContext } from 'react';
 
 interface Episode {
   id: string,
@@ -25,6 +27,7 @@ interface HomeProps {
 }
 
 export default function Home({ latestEpisodes, allEpisodes }: HomeProps) {
+  const { play } = useContext(PlayerContext)
 
   return (
     <div className={styles.homePage}>
@@ -51,7 +54,7 @@ export default function Home({ latestEpisodes, allEpisodes }: HomeProps) {
                   <span>{ep.durationAsString}</span>
                 </div>
 
-                <button type="button">
+                <button type="button" onClick={() => play(ep)}>
                   <img src="/play-green.svg" alt="Play episode" />
                 </button>
               </li>
@@ -95,7 +98,7 @@ export default function Home({ latestEpisodes, allEpisodes }: HomeProps) {
 									<td className={styles.publishedAtTableData}>{ep.publishedAt}</td>
 									<td>{ep.durationAsString}</td>
 									<td>
-										<button type="button">
+										<button type="button" onClick={() => play(ep)}>
 											<img src="/play-green.svg" alt="Play episode" />
 										</button>
 									</td>

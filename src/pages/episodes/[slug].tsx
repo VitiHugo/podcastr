@@ -4,6 +4,8 @@ import { GetStaticPaths, GetStaticProps } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { useContext } from "react";
+import { PlayerContext } from "../../contexts/PlayerContext";
 import { api } from "../../services/api";
 import { convertDurationToTimeString } from "../../utils/convertDurationToTimeString";
 
@@ -27,6 +29,13 @@ interface EpisodeProps {
 
 export default function Episode({ episode }: EpisodeProps) {
   const router = useRouter();
+  const { 
+    episodeList,
+    currentEpisodeIndex,
+    isPlaying,
+    togglePlay,
+    play
+  } = useContext(PlayerContext)
 
   return ( 
     <div className={styles.episode}>
@@ -42,9 +51,27 @@ export default function Episode({ episode }: EpisodeProps) {
           src={episode.thumbnail}
           objectFit="cover"
         />
-        <button type="button">
-          <img src="/play.svg" alt="Play episode" />
-        </button>
+        { (isPlaying && episodeList[currentEpisodeIndex].id === episode.id) ? (
+          <button 
+            type="button"
+            onClick={() => togglePlay()}
+          >
+            { isPlaying ? (
+              <img src="/pause.svg" alt="Pause" />
+            ) : (
+              <img src="/play.svg" alt="Play" />
+            )}
+          </button>
+        ) 
+        : (
+          <button 
+            type="button"
+            onClick={() => play(episode)}
+          >
+            <img src="/play.svg" alt="Play" />
+          </button>
+        )}
+        
       </div>
 
       <header>
