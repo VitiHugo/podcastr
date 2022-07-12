@@ -3,9 +3,7 @@ import enUS from "date-fns/locale/en-US";
 import { GetStaticPaths, GetStaticProps } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/router";
-import { useContext } from "react";
-import { PlayerContext } from "../../contexts/PlayerContext";
+import { usePlayer } from "../../contexts/PlayerContext";
 import { api } from "../../services/api";
 import { convertDurationToTimeString } from "../../utils/convertDurationToTimeString";
 
@@ -28,14 +26,13 @@ interface EpisodeProps {
 }
 
 export default function Episode({ episode }: EpisodeProps) {
-  const router = useRouter();
   const { 
     episodeList,
     currentEpisodeIndex,
     isPlaying,
     togglePlay,
     play
-  } = useContext(PlayerContext)
+  } = usePlayer()
 
   return ( 
     <div className={styles.episode}>

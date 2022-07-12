@@ -7,8 +7,7 @@ import enUS from 'date-fns/locale/en-US';
 
 import styles from '../styles/home.module.scss';
 import Link from 'next/link';
-import { PlayerContext } from '../contexts/PlayerContext';
-import { useContext } from 'react';
+import { usePlayer } from '../contexts/PlayerContext';
 
 interface Episode {
   id: string,
@@ -27,14 +26,16 @@ interface HomeProps {
 }
 
 export default function Home({ latestEpisodes, allEpisodes }: HomeProps) {
-  const { play } = useContext(PlayerContext)
+  const { playList } = usePlayer()
+
+  const episodeList = [...latestEpisodes, ...allEpisodes]
 
   return (
     <div className={styles.homePage}>
       <section className={styles.latestEpisodes}>
         <h2>Latests Releases</h2>
         <ul>
-          {latestEpisodes.map(ep => {
+          {latestEpisodes.map((ep, index) => {
             return (
               <li key={ep.id}>
                 <Image
@@ -54,7 +55,7 @@ export default function Home({ latestEpisodes, allEpisodes }: HomeProps) {
                   <span>{ep.durationAsString}</span>
                 </div>
 
-                <button type="button" onClick={() => play(ep)}>
+                <button type="button" onClick={() => playList(episodeList, index)}>
                   <img src="/play-green.svg" alt="Play episode" />
                 </button>
               </li>
@@ -77,7 +78,7 @@ export default function Home({ latestEpisodes, allEpisodes }: HomeProps) {
             </tr>
 					</thead>
 					<tbody>
-						{allEpisodes.map((ep) => { 
+						{allEpisodes.map((ep, index) => { 
 							return (
 								<tr key={ep.id}>
 									<td className={styles.imageTableData}>
@@ -98,7 +99,7 @@ export default function Home({ latestEpisodes, allEpisodes }: HomeProps) {
 									<td className={styles.publishedAtTableData}>{ep.publishedAt}</td>
 									<td>{ep.durationAsString}</td>
 									<td>
-										<button type="button" onClick={() => play(ep)}>
+										<button type="button" onClick={() => playList(episodeList, index + latestEpisodes.length)}>
 											<img src="/play-green.svg" alt="Play episode" />
 										</button>
 									</td>

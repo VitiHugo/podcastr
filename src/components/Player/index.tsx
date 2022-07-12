@@ -1,9 +1,9 @@
-import { useContext, useEffect, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Slider from 'rc-slider';
 import 'rc-slider/assets/index.css';
 
-import { PlayerContext } from '../../contexts/PlayerContext';
+import { usePlayer } from '../../contexts/PlayerContext';
 
 import styles from './styles.module.scss';
 
@@ -14,9 +14,13 @@ export function Player() {
     episodeList,
     currentEpisodeIndex,
     isPlaying, 
+    hasNext,
+    hasPrevious,
+    playNext,
+    playPrevious,
     togglePlay,
     setPlayingState
-  } = useContext(PlayerContext)
+  } = usePlayer()
 
   useEffect(() => {
     if(!audioRef.current)
@@ -72,7 +76,7 @@ export function Player() {
           <span>00:00</span>
         </div>
         
-        { episode && (
+        {episode && (
           <audio 
             src={episode.url}  
             ref={audioRef}
@@ -86,7 +90,7 @@ export function Player() {
           <button type="button" disabled={!episode}>
             <img src="/shuffle.svg" alt="Shuffle" />
           </button>
-          <button type="button" disabled={!episode}>
+          <button type="button" onClick={playPrevious} disabled={!episode || !hasPrevious}>
             <img src="/play-previous.svg" alt="Play previous" />
           </button>
           <button 
@@ -101,7 +105,7 @@ export function Player() {
               <img src="/play.svg" alt="Play" />
             )}
           </button>
-          <button type="button" disabled={!episode}>
+          <button type="button" onClick={playNext} disabled={!episode || !hasNext}>
             <img src="/play-next.svg" alt="Play next" />
           </button>
           <button type="button" disabled={!episode}>
