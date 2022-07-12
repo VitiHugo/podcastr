@@ -8,6 +8,7 @@ import enUS from 'date-fns/locale/en-US';
 import styles from '../styles/home.module.scss';
 import Link from 'next/link';
 import { usePlayer } from '../contexts/PlayerContext';
+import Head from 'next/head';
 
 interface Episode {
   id: string,
@@ -32,6 +33,9 @@ export default function Home({ latestEpisodes, allEpisodes }: HomeProps) {
 
   return (
     <div className={styles.homePage}>
+      <Head>
+        <title>Home | Podcastr</title>
+      </Head>
       <section className={styles.latestEpisodes}>
         <h2>Latests Releases</h2>
         <ul>
